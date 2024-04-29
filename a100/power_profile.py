@@ -7,7 +7,7 @@ import sys
 def get_gpu_power():
     try:
         # Execute nvidia-smi command to get the power draw
-        result = subprocess.run(['nvidia-smi', '--query-gpu=power.draw', '--format=csv,noheader,nounits'],
+        result = subprocess.run(['nvidia-smi','--id=0', '--query-gpu=power.draw', '--format=csv,noheader,nounits'],
                                 capture_output=True, text=True)
         power = result.stdout.strip()
         return power
