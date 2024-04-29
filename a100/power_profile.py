@@ -1,6 +1,7 @@
 import subprocess
 import time
 import csv
+import sys
 
 # Function to get GPU power usage
 def get_gpu_power():
@@ -35,17 +36,26 @@ def run_application(app_name):
     # Process has finished, return power data
     return power_measurements
 
-# Main function to run the applications and collect GPU power data
-def main():
-    # Run v1 and collect its GPU power data
-    power_data_v1 = run_application('v2')
-    # Write results to CSV for v1
-    with open('gpu_power_results_v2.csv', 'w', newline='') as file:
+# Main function to run the application and collect GPU power data
+def main(app_name):
+    # Collect GPU power data for the specified application
+    power_data = run_application(app_name)
+
+    # File name based on application name
+    file_name = f'gpu_power_results_{app_name}.csv'
+
+    # Write results to CSV
+    with open(file_name, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Time', 'GPU Power (W)'])
-        for time_elapsed, power in power_data_v1:
+        for time_elapsed, power in power_data:
             writer.writerow([f"{time_elapsed:.2f}", power])
 
+    print(f"GPU power data for {app_name} has been written to {file_name}.")
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <application_name>")
+    else:
+        main(sys.argv[1])
 
